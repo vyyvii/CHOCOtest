@@ -43,8 +43,32 @@ jobs:
       - name: Clean
         run: make clean
 
-  push_to_mirror:
+      - name: Executables
+        run: |
+          IFS=',' read -ra files <<< "${{ vars.EXECUTABLES }}"
+
+          for file in "${files[@]}"; do
+            if [ ! -f "$file" ] || [ ! -x "$file" ]; then
+              echo "::error file=$file::$file not found or not executable"
+              exit 1
+            fi
+          done
+
+  run_tests:
     needs: check_compilation_and_coding_style
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Launch tests
+        run: make tests_run
+        timeout-minutes: 2
+
+  push_to_mirror:
+    needs: run_tests
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
