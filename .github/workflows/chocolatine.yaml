@@ -45,12 +45,14 @@ jobs:
 
       - name: Executables
         run: |
-          echo "$EXECUTABLES" | tr ',' '\n' | while read file; do
+          error=0
+          echo "${{ vars.EXECUTABLES }}" | tr ',' '\n' | while read file; do
             if [ ! -f "$file" ] || [ ! -x "$file" ]; then
               echo "::error file=$file::$file not found or not executable"
-              exit 1
+              error=1
             fi
           done
+          exit $error
 
   run_tests:
     needs: check_compilation_and_coding_style
