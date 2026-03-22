@@ -32,7 +32,7 @@ jobs:
       - name: Check coding style
         run: |
           EXIT=0
-          while IFS= read -r line; do
+          grep "\[Banana\]" errors.txt | while IFS= read -r line; do
             file=$(echo "$line" | cut -d':' -f1)
             line_num=$(echo "$line" | cut -d':' -f2)
             message=$(echo "$line" | sed 's/.*] //' | sed 's/ (C-[A-Z0-9]*)//')
@@ -40,7 +40,7 @@ jobs:
             code=$(echo "$line" | grep -o "C-[A-Z0-9]*")
             echo "::error file=$file,line=$line_num,title=$type coding style error::$code - $message"
             EXIT=1
-          done < <(grep "\[Banana\]" errors.txt)
+          done
           if [ $EXIT -eq 1 ]; then
             exit 1
           fi
