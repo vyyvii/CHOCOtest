@@ -4,6 +4,11 @@ on:
   push:
   pull_request:
 
+env:
+  EXECUTABLES: mysh
+  MIRROR_SSH_URL: git@github.com:vyyvii/mirror_chocolatine.git
+  CC: epiclang
+
 jobs:
   check_compilation_and_coding_style:
     if: |
@@ -26,7 +31,8 @@ jobs:
 
       - name: Check coding style
         run: |
-          grep "\[Banana\]" errors.txt | while IFS= read -r line; do
+          EXIT=0
+          while IFS= read -r line; do
             file=$(echo "$line" | cut -d':' -f1)
             line_num=$(echo "$line" | cut -d':' -f2)
             message=$(echo "$line" | sed 's/.*] //' | sed 's/ (C-[A-Z0-9]*)//')
@@ -34,7 +40,7 @@ jobs:
             code=$(echo "$line" | grep -o "C-[A-Z0-9]*")
             echo "::error file=$file,line=$line_num,title=$type coding style error::$code - $message"
             EXIT=1
-          done
+          done < <(grep "\[Banana\]" errors.txt)
           if [ $EXIT -eq 1 ]; then
             exit 1
           fi
@@ -44,13 +50,20 @@ jobs:
 
       - name: Executables
         run: |
-          echo "${{ vars.EXECUTABLES }}" | tr ',' '\n' | while read file; do
-            if [ ! -f "$file" ] || [ ! -x "$file" ]; then
-              echo $file
-              echo "::error file=$file::$file not found or not executable"
-              exit 1
+          EXIT=0
+          echo "$EXECUTABLES" | tr ',' '\n' | while read file; do
+            if [ ! -f "$file" ]; then
+              echo "::error file=$file::$file not found"
+              EXIT=1
+            fi
+            if [ ! -x "$file" ]; then
+              echo "::error file=$file::$file not executable"
+              EXIT=1
             fi
           done
+          if [ $EXIT -eq 1 ]; then
+            exit 1
+          fi
 
   run_tests:
     needs: check_compilation_and_coding_style
@@ -80,5 +93,5 @@ jobs:
       - name: Push to mirror
         uses: pixta-dev/repository-mirroring-action@v1
         with:
-          target_repo_url: ${{ vars.MIRROR_SSH_URL }}
+          target_repo_url: $MIRROR_SSH_URL
           ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
