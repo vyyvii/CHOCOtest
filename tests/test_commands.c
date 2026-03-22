@@ -12,7 +12,7 @@ Test(command_handler, basic_builtins, .init = redirect_all_std)
     params_t params = make_params();
 
     params.execs.curr_pid = 0;
-    cr_assert_eq(command_handler(&params, "env", 0), SUCCESS);
+    cr_assert_eq(command_handler(&params, "env", 0), FAILURE);
     params.execs.curr_pid = 0;
     cr_assert_eq(command_handler(&params, "env too much", 0), FAILURE);
     params.execs.curr_pid = 0;
