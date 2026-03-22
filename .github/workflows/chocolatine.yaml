@@ -20,18 +20,11 @@ jobs:
         run: banana-check-repo .
 
       - name: Compile
-        run: make
+        run: make CC=epiclang > errors.txt 2>&1
         timeout-minutes: 2
 
       - name: Check coding style
         run: |
-          make fclean
-
-          set +e
-          EXIT_CODE=$?
-          make CC=epiclang > errors.txt 2>&1
-          set -e
-
           if [ $EXIT_CODE -ne 0 ]; then
 
             grep "\[Banana\]" errors.txt | while IFS= read -r line; do
