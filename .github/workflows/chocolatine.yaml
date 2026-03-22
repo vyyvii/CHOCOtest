@@ -8,7 +8,7 @@ jobs:
   check_compilation_and_coding_style:
     if: |
       !startsWith(github.ref, 'refs/heads/no-ga/')
-      && github.repository != 'mirror/repo'
+      && github.repository != 'vyyvii/mirror_chocolatine'
     runs-on: ubuntu-latest
     container:
       image: epitechcontent/epitest-docker
@@ -72,6 +72,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Clean all the repo
         run: make fclean ; ls -R
