@@ -48,7 +48,12 @@ jobs:
       - name: Clean
         run: make clean
 
-    push_to_mirror:
+  push_to_mirror:
+    needs: check_compilation_and_coding_style
+
+    runs-on: ubuntu-latest
+
+    steps:
       - uses: actions/checkout@v4
 
       - name: Push to mirror
