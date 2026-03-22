@@ -20,7 +20,9 @@ jobs:
         run: banana-check-repo .
 
       - name: Compile
-        run: make CC=epiclang > errors.txt 2>&1
+        run: |
+          make CC=epiclang > errors.txt 2>&1
+          $EXIT_CODE=$?
         timeout-minutes: 2
 
       - name: Check coding style
