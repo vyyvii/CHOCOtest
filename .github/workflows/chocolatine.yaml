@@ -38,7 +38,6 @@ jobs:
           if [ $EXIT -eq 1 ]; then
             exit 1
           fi
-          make fclean
 
       - name: Clean
         run: make clean
@@ -49,7 +48,7 @@ jobs:
             if [ ! -f "$file" ] || [ ! -x "$file" ]; then
               echo $file
               echo "::error file=$file::$file not found or not executable"
-              eexit 1
+              exit 1
             fi
           done
 
