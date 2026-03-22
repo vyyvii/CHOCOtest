@@ -22,25 +22,22 @@ jobs:
       - name: Compile
         run: |
           make CC=epiclang > errors.txt 2>&1
-          echo "EXIT_CODE=$?" >> $GITHUB_ENV
-          EXIT_CODE=$?
         timeout-minutes: 2
 
       - name: Check coding style
         run: |
-          if [ $EXIT_CODE -ne 0 ]; then
-
-            grep "\[Banana\]" errors.txt | while IFS= read -r line; do
-              echo "$line"
-              file=$(echo "$line" | cut -d':' -f1)
-              line_num=$(echo "$line" | cut -d':' -f2)
-              message=$(echo "$line" | sed 's/.*] //')
-              type=$(echo "$line" | grep -o "\[Minor\]\|\[Major\]\|\[Info\]" | tr -d '[]')
-              echo "::error file=$file,line=$line_num::$message"
-              filename=$(basename "$file")
-              echo "::error file=$file,line=$line_num::$type coding style error: $filename#L$line_num%0A$message"
-            done
-
+          grep "\[Banana\]" errors.txt | while IFS= read -r line; do
+            echo "$line"
+            file=$(echo "$line" | cut -d':' -f1)
+            line_num=$(echo "$line" | cut -d':' -f2)
+            message=$(echo "$line" | sed 's/.*] //')
+            type=$(echo "$line" | grep -o "\[Minor\]\|\[Major\]\|\[Info\]" | tr -d '[]')
+            echo "::error file=$file,line=$line_num::$message"
+            filename=$(basename "$file")
+            echo "::error file=$file,line=$line_num::$type coding style error: $filename#L$line_num%0A$message"
+            EXIT=1
+          done
+          if [ $EXIT -eq 1 ]; then
             exit 1
           fi
 
