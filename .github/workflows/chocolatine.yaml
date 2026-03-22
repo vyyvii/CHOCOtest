@@ -18,13 +18,14 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Check Repo with banana
-        run: banana-check-repo . > errors.txt
-            EXIT_CODE=$?
-            if [ $EXIT_CODE -ne 0 ]; then
-              while IFS= read -r line; do
-                echo "$line"
-              done < errors.txt
-            fi
+        run: |
+          banana-check-repo . > errors.txt
+          EXIT_CODE=$?
+          if [ $EXIT_CODE -ne 0 ]; then
+            while IFS= read -r line; do
+              echo "$line"
+            done < errors.txt
+          fi
 
       - name: Compile it
         run: make
