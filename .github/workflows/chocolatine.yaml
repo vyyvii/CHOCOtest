@@ -23,6 +23,8 @@ jobs:
 
       - name: Check Repo with banana
         run: |
+          EXIT=0
+
           set +e
           banana-check-repo . > errors.txt
           set -e
@@ -34,12 +36,13 @@ jobs:
             type=$(echo "$line" | grep -o "\[Fatal\]\|\[Minor\]\|\[Major\]\|\[Info\]" | tr -d '[]')
             code=$(echo "$line" | grep -o "C-[A-Z0-9]*")
             echo "::error file=$file,title=$type coding style error::$code - $message"
+            EXIT=1
           done < banana_errors.txt
 
-          if grep "\[Banana\]" errors.txt; then
+          if [ $EXIT -eq 1]; then
             exit 1
           fi
-
+          exit 0
 
       - name: Compile
         run: |
@@ -61,6 +64,7 @@ jobs:
           if grep "\[Banana\]" errors.txt; then
             exit 1
           fi
+          exit 0
 
       - name: Clean
         run: make clean
@@ -68,7 +72,9 @@ jobs:
       - name: Executables
         run: |
           EXIT=0
-          echo "$EXECUTABLES" | tr ',' '\n' | while read file; do
+
+          echo "$EXECUTABLES" | tr ',' '\n' > exec_list.txt
+          while IFS= read -r file; do
             if [ ! -f "$file" ]; then
               echo "::error file=$file::$file not found"
               EXIT=1
@@ -77,10 +83,12 @@ jobs:
               echo "::error file=$file::$file not executable"
               EXIT=1
             fi
-          done
+          done < exec_list.txt
+
           if [ $EXIT -eq 1 ]; then
             exit 1
           fi
+          exit 0
 
   run_tests:
     needs: check_compilation_and_coding_style
