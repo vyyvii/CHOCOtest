@@ -27,14 +27,14 @@ jobs:
       - name: Check coding style
         run: |
           grep "\[Banana\]" errors.txt | while IFS= read -r line; do
-            echo "$line"
             file=$(echo "$line" | cut -d':' -f1)
             line_num=$(echo "$line" | cut -d':' -f2)
             message=$(echo "$line" | sed 's/.*] //')
             type=$(echo "$line" | grep -o "\[Minor\]\|\[Major\]\|\[Info\]" | tr -d '[]')
-            echo "::error file=$file,line=$line_num::$message"
-            filename=$(basename "$file")
-            echo "::error file=$file,line=$line_num::$type coding style error: $filename#L$line_num%0A$message"
+            code=$(echo "$line" | grep -o "C-[A-Z0-9]*")
+            filename="./$file"
+            clean_msg=$(echo "$line" | sed 's/.*] //' | sed 's/ (C-[A-Z0-9]*)//')
+            echo "::error file=$file,line=$line_num::$type coding style error: $filename%0A$code - $clean_msg"
             EXIT=1
           done
           if [ $EXIT -eq 1 ]; then
