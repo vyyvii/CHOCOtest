@@ -108,7 +108,7 @@ void child_process(params_t *params, char **command, char *comm,
         exit(0);
     if (func)
         func->function(params, func->array);
-    else {
+    if (comm) {
         execve(comm, command, params->sh.envp);
         errno_messages(comm, 0);
     }

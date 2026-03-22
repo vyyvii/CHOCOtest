@@ -23,18 +23,23 @@ static void create_fail_file(params_t *params)
 static int launch_commands(params_t *params, char **inputs)
 {
     int ret = SUCCESS;
+    int f_ret = ret;
 
-    for (int i = 0; inputs[i]; i++)
+    for (int i = 0; inputs[i]; i++) {
         ret = command_handler(params, inputs[i], i);
-    if (ret == FAILURE)
+        f_ret = (ret == FAILURE) ? FAILURE : f_ret;
+    }
+    if (ret == FAILURE && params->execs.rdr)
         create_fail_file(params);
-    if (params->execs.pipes && ret == SUCCESS) {
-        for (int i = 0; i < params->execs.nb_pid; i++)
+    if (params->execs.pipes) {
+        for (int i = 0; i < params->execs.nb_pid; i++) {
             ret = parents_process(params->execs.pids[i]);
+            f_ret = (ret == FAILURE) ? FAILURE : f_ret;
+        }
     }
     free_table((void **)inputs);
     free_pipeline(params);
-    return ret;
+    return f_ret;
 }
 
 static int launch_pipelines(params_t *params, int *ret)
