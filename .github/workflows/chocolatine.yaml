@@ -29,12 +29,10 @@ jobs:
           grep "\[Banana\]" errors.txt | while IFS= read -r line; do
             file=$(echo "$line" | cut -d':' -f1)
             line_num=$(echo "$line" | cut -d':' -f2)
-            message=$(echo "$line" | sed 's/.*] //')
+            message=$(echo "$line" | sed 's/.*] //' | sed 's/ (C-[A-Z0-9]*)//')
             type=$(echo "$line" | grep -o "\[Minor\]\|\[Major\]\|\[Info\]" | tr -d '[]')
             code=$(echo "$line" | grep -o "C-[A-Z0-9]*")
-            filename="./$file"
-            clean_msg=$(echo "$line" | sed 's/.*] //' | sed 's/ (C-[A-Z0-9]*)//')
-            echo "::error file=$file,line=$line_num::$type coding style error: $filename%0A$code - $clean_msg"
+            echo "::error file=$file,line=$line_num,title=$type coding style error: ./$file::$code - $message"
             EXIT=1
           done
           if [ $EXIT -eq 1 ]; then
