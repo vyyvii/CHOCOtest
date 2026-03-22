@@ -24,7 +24,7 @@ jobs:
         run: make
         timeout-minutes: 2
 
-      - name: Check Repo with banana
+      - name: Check coding style
         run: |
           make fclean
           set +e
@@ -43,4 +43,3 @@ jobs:
 
       - name: Clean
         run: make clean
-src/main.c:13:9: warning: [Banana] [Major] variable not declared at the beginning of the function (C-L5) 13 | int ac=0; | ^
