@@ -32,7 +32,7 @@ jobs:
             message=$(echo "$line" | sed 's/.*] //' | sed 's/ (C-[A-Z0-9]*)//')
             type=$(echo "$line" | grep -o "\[Minor\]\|\[Major\]\|\[Info\]" | tr -d '[]')
             code=$(echo "$line" | grep -o "C-[A-Z0-9]*")
-            echo "::error file=$file,line=$line_num,title=$type coding style error: ./$file::$code - $message"
+            echo "::error file=$file,line=$line_num,title=$type coding style error::$code - $message"
             EXIT=1
           done
           if [ $EXIT -eq 1 ]; then
@@ -55,3 +55,5 @@ jobs:
         with:
           target_repo_url: ${{ vars.MIRROR_SSH_URL }}
           ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
+          force: true
+          source_repo_path: "."
