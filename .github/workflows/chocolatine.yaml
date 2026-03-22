@@ -7,8 +7,7 @@ on:
 jobs:
   check_compilation_and_coding_style:
     if: |
-      github.event_name == 'push'
-      && !startsWith(github.ref, 'refs/heads/no-ga/')
+      !startsWith(github.ref, 'refs/heads/no-ga/')
       && github.repository != 'mirror/repo'
     runs-on: ubuntu-latest
     container:
@@ -20,26 +19,40 @@ jobs:
       - name: Check Repo with banana
         run: banana-check-repo . || true
 
-      - name: Compile it
+      - name: Compile
         run: make
         timeout-minutes: 2
 
       - name: Check coding style
         run: |
           make fclean
+
           set +e
           banana-check-repo . > errors.txt
           EXIT_CODE=$?
-          make >> errors.txt 2>&1
+          make CC=epiclang >> errors.txt 2>&1
           set -e
+
           if [ $EXIT_CODE -ne 0 ]; then
+
             grep "\[Banana\]" errors.txt | while IFS= read -r line; do
-              file=$(echo "$line" | cut -d':' -f1')
+              file=$(echo "$line" | cut -d':' -f1)
               line_num=$(echo "$line" | cut -d':' -f2)
               message=$(echo "$line" | sed 's/.*\[Banana\] //')
               echo "::error file=$file,line=$line_num::$message"
             done < errors.txt
+
+            exit 1
           fi
 
       - name: Clean
         run: make clean
+
+    push_to_mirror:
+      - uses: actions/checkout@v4
+
+      - name: Push to mirror
+        uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url: ${{ env.MIRROR_SSH_URL }}
+          ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
