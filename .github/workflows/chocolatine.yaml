@@ -47,7 +47,7 @@ jobs:
         run: |
           IFS=',' read -ra files <<< "${{ vars.EXECUTABLES }}"
 
-          for file in "${files[@]}"; do
+          echo "$EXECUTABLES" | tr ',' '\n' | while read file; do
             if [ ! -f "$file" ] || [ ! -x "$file" ]; then
               echo "::error file=$file::$file not found or not executable"
               exit 1
