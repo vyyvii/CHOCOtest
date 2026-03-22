@@ -38,6 +38,7 @@ jobs:
           if [ $EXIT -eq 1 ]; then
             exit 1
           fi
+          make fclean
 
       - name: Clean
         run: make clean
@@ -50,10 +51,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Clean all the repo
+        run: make fclean
       - name: Push to mirror
         uses: pixta-dev/repository-mirroring-action@v1
         with:
           target_repo_url: ${{ vars.MIRROR_SSH_URL }}
           ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
-          force: true
-          source_repo_path: "."
