@@ -10,7 +10,9 @@ jobs:
       github.event_name == 'push'
       && !startsWith(github.ref, 'refs/heads/no-ga/')
       && github.repository != 'mirror/repo'
-    runs-on: epitechcontent/epitest-docker:latest
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
 
     steps:
       - uses: actions/checkout@v4
