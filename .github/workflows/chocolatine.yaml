@@ -28,7 +28,7 @@ jobs:
           set +e
           banana-check-repo . > errors.txt
           set -e
-
+          cat errors.txt
           grep "\[Banana\]" errors.txt > banana_errors.txt
           while IFS= read -r line; do
             file=$(echo "$line" | cut -d':' -f1)
