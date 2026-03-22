@@ -27,9 +27,8 @@ jobs:
 
           set +e
           banana-check-repo . > errors.txt
-          set -e
-          cat errors.txt
           grep "\[Banana\]" errors.txt > banana_errors.txt
+          set -e
           while IFS= read -r line; do
             file=$(echo "$line" | cut -d':' -f1)
             message=$(echo "$line" | sed 's/.*] //' | sed 's/ (C-[A-Z0-9]*)//')
@@ -51,7 +50,9 @@ jobs:
 
       - name: Check coding style
         run: |
+          set +e
           grep "\[Banana\]" errors.txt > banana_errors.txt
+          set -e
           while IFS= read -r line; do
             file=$(echo "$line" | cut -d':' -f1)
             line_num=$(echo "$line" | cut -d':' -f2)
