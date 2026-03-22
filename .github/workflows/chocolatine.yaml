@@ -40,7 +40,7 @@ jobs:
               line_num=$(echo "$line" | cut -d':' -f2)
               message=$(echo "$line" | sed 's/.*\[Banana\] //')
               echo "::error file=$file,line=$line_num::$message"
-            done < errors.txt
+            done
 
             exit 1
           fi
