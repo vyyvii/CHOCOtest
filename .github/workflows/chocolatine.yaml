@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  check_compilation_and_coding_style:
     if: |
       github.event_name == 'push'
       && !startsWith(github.ref, 'refs/heads/no-ga/')

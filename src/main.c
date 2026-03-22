@@ -10,6 +10,6 @@
 int main(int ac, char **av, char **envp)
 {
     (void)av;
-    int ac=0;
+    int a = 0;
     return minishell(ac, envp);
 }
