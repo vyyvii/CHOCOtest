@@ -9,6 +9,7 @@
     #define MINISHELL_H
     #define _XOPEN_SOURCE 700
     #define SUCCESS 0
+    #define OK 1
     #define FAILURE 84
     #include "utilslib.h"
     #include <signal.h>
