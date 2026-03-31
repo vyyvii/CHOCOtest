@@ -2,7 +2,11 @@ name: chocolatine
 
 on:
   push:
+    branches-ignore:
+      - 'no-ga/**'
   pull_request:
+    branches-ignore:
+      - 'no-ga/**'
 
 env:
   EXECUTABLES: mysh
@@ -11,9 +15,7 @@ env:
 
 jobs:
   check_compilation_and_coding_style:
-    if: |
-      !startsWith(github.ref, 'refs/heads/no-ga/')
-      && github.repository != 'EpitechPGE1-2025/G-DOP-200-LYN-2-1-chocolatine-3'
+    if: github.repository != 'EpitechPGE1-2025/G-DOP-200-LYN-2-1-chocolatine-3'
     runs-on: ubuntu-latest
     container:
       image: epitechcontent/epitest-docker
