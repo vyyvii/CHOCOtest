@@ -1,4 +1,3 @@
-
 int main(void)
 {
     int *ptr = 0;

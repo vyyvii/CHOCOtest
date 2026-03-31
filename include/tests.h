@@ -7,14 +7,25 @@
 
 #ifndef TEST_H
     #define TEST_H
-    #include <criterion/criterion.h>
-    #include <criterion/redirect.h>
+    #include <stddef.h>
+    #include <stdarg.h>
+    #include <setjmp.h>
+    #include <cmocka.h>
     #include "my.h"
 
-// TOOL
-void redirect_all_std(void);
-char **make_env(void);
+// MAIN
+char *capture_stdout(void (*func)(void));
 params_t make_params(void);
-params_t make_params_parse(char *input);
+char **make_env(void);
+
+// TEST COMMANDES
+void test_command_handler(void **state);
+void test_execve(void **state);
+
+// TEST ENV
+void test_copy_env(void **state);
+void test_get_value_env(void **state);
+void test_change_value_env(void **state);
+void test_unset_value_env(void **state);
 
 #endif /* TEST_H */

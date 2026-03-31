@@ -6,6 +6,7 @@ unit_tests
 functional_tests
 coverage_report
 mysh
+*.out
 *.log
 *.html
 *.css

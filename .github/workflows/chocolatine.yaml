@@ -6,14 +6,14 @@ on:
 
 env:
   EXECUTABLES: mysh
-  MIRROR_SSH_URL: git@github.com:vyyvii/mirror_chocolatine.git
+  MIRROR_SSH_URL: git@github.com:EpitechPGE1-2025/G-DOP-200-LYN-2-1-chocolatine-3.git
   CC: epiclang
 
 jobs:
   check_compilation_and_coding_style:
     if: |
       !startsWith(github.ref, 'refs/heads/no-ga/')
-      && github.repository != 'vyyvii/mirror_chocolatine'
+      && github.repository != 'EpitechPGE1-2025/G-DOP-200-LYN-2-1-chocolatine-3'
     runs-on: ubuntu-latest
     container:
       image: epitechcontent/epitest-docker

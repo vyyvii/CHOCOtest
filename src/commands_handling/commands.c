@@ -46,8 +46,7 @@ static int launch_function(int (*function)(params_t *, char **),
 {
     function_pipe_t func;
 
-    if ((params->execs.pipes || params->execs.rdr[i].is)
-        && params->execs.curr_pid != params->execs.nb_pid - 1) {
+    if (params->execs.pipes || params->execs.rdr[i].is) {
         func.array = array;
         func.function = function;
         return use_execve(params, array, &func);

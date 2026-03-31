@@ -36,7 +36,6 @@ typedef struct redirection_s {
 
 typedef struct pipeline_ctx_s {
     int (*pipes)[2];
-    int pipe_fail;
     int nb_pipes;
     pid_t *pids;
     int nb_pid;

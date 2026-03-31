@@ -14,7 +14,6 @@
 # NAME
 # ─────────────────────────────────────────────────────────────
 NAME 		= mysh
-
 # ─────────────────────────────────────────────────────────────
 # SOURCE FILES AND OBJECT FILES
 # ─────────────────────────────────────────────────────────────
@@ -28,10 +27,9 @@ SRC 		= src/minishell.c \
 			  src/execute/child_proc.c \
 			  src/execute/parent_proc.c
 SRC_MAIN	= src/main.c
-SRC_TEST 	= tests/test_tool.c \
+SRC_TEST 	= tests/test_main.c \
 			  tests/test_env.c \
-			  tests/test_commands.c \
-			  tests/test_parsing.c
+			  tests/test_commands.c
 OBJ 		:= $(patsubst %.c,%.o,$(SRC))
 OBJ_MAIN	:= $(patsubst %.c,%.o,$(SRC_MAIN))
 OBJ_TEST 	:= $(patsubst %.c,%.o,$(SRC_TEST))
@@ -51,7 +49,7 @@ LDFLAGS 	= -L./ -lUtilsLib
 # TEST FLAGS & LIBS
 # ─────────────────────────────────────────────────────────────
 TEST_FLAGS  = --coverage
-TEST_LIBS   = -lcriterion
+TEST_LIBS   = -lcmocka
 
 # ─────────────────────────────────────────────────────────────
 # TOOLS
