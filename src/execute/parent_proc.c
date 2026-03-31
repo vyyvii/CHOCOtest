@@ -87,7 +87,8 @@ static int fork_and_launch(params_t *params, char **command, char *comm,
 
     params->execs.pids[params->execs.curr_pid] = fork();
     if (params->execs.pids[params->execs.curr_pid] == -1) {
-        free(comm);
+        if (comm)
+            free(comm);
         return FAILURE;
     }
     if (params->execs.pids[params->execs.curr_pid] == 0)
@@ -103,8 +104,6 @@ int use_execve(params_t *params, char **command, function_pipe_t *func)
     int ret = SUCCESS;
 
     comm = get_comm(params, command);
-    if (!comm)
-        return FAILURE;
     if (params->execs.pipes
         && params->execs.curr_pid < params->execs.nb_pid - 1)
         pipe(params->execs.pipes[params->execs.curr_pid]);
@@ -114,6 +113,8 @@ int use_execve(params_t *params, char **command, function_pipe_t *func)
         close(params->execs.pipes[params->execs.curr_pid - 1][1]);
     }
     params->execs.curr_pid++;
+    if (!comm)
+        return FAILURE;
     free(comm);
     return ret;
 }

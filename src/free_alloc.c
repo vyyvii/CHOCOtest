@@ -20,7 +20,6 @@ char **copy_env(char **envp)
             free_partial_table((void **)env, i);
     }
     env[ac] = NULL;
-    int a = 0;
     return env;
 }
 
